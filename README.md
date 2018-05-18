@@ -171,6 +171,10 @@ class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate 
 }
 ```
 
+NOTES :-
+---
+Please note there is a three types of framework files. One is only for iPhone Device/Generic Devices, and second is only for Simulator and third is run on both. When you publish or archive the app please use or rplace the framework to "FrameworkForDeviceOnly" framework file otherwise it creates an error for architecture.
+
 LICENSE
 ---
 Distributed under the MIT License.
