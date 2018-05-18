@@ -1,0 +1,5 @@
+1. Move "BHTextFieldManager.framework" file to your project's "Framework" Folder and Select Copy if Needed.
+2. Go to Project Settings->Target App->Embedded Binaries. Click on Add and Select "BHTextFieldManager.framework".
+3. See the demo for functional example.
+
+Note: Please note there is a three types of framework files. One is only for iPhone Device/Generic Devices, and second is only for Simulator and third is run on both. When you publish or archive the app please use or rplace the framework to "FrameworkForDeviceOnly" framework file otherwise it creates an error.
