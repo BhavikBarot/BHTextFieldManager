@@ -58,7 +58,7 @@ While coping the framework in Project Explorer, check “Copy items if needed�
 
 ![6](https://user-images.githubusercontent.com/39043956/40243487-f756405e-5add-11e8-9545-51f317a417cb.jpg)
 
-2) set the textfields/textviews and give a tag from 1 to N in order to navigate the textfields sequance.
+2) set the textfields/textviews and give a tag from 101 to N in order to navigate the textfields sequance.
 
 3) delegate the textfields and textviews.
 
@@ -77,7 +77,7 @@ ViewController.h
 #import <UIKit/UIKit.h>
 #import <BHTextFieldManager/BHTextFieldManager.h>
 
-@interface ViewController : UIViewController<UITextFieldDelegate,UITextViewDelegate,BHTextFieldManagerAccesoryViewDelegate>
+@interface ViewController : UIViewController<UITextFieldDelegate,UITextViewDelegate,BHTextFieldManagerDelegate>
 
 @end
 
@@ -87,7 +87,7 @@ ViewController.m
 
 @interface ViewController ()
 {
-    BHTextFieldManagerAccesoryView *BHFramework;
+    BHTextFieldManager *BHFramework;
 }
 @end
 
@@ -98,7 +98,7 @@ ViewController.m
     // Do any additional setup after loading the view, typically from a nib.
 
     //Setup the BHTextFieldManager.
-    BHFramework = [[BHTextFieldManagerAccesoryView alloc] init];
+    BHFramework = [[BHTextFieldManager alloc] init];
     BHFramework.delegate = self;
     [BHFramework setEnable:self.view];
 }
@@ -111,7 +111,7 @@ ViewController.m
     return YES;
 }
 
-//TODO: BHTextFieldManagerAccesoryViewDelegate Methods
+//TODO: BHTextFieldManagerDelegate Methods
 -(void)upKeyBoardBtn:(id)sender {
     //Do Something...
     NSLog(@"Sender's First Responder is Resign, and Up Button Clicked");
@@ -125,6 +125,12 @@ ViewController.m
     NSLog(@"Sender's First Responder is Resign, and Done Button Clicked");
 }
 
+//Error Showing Method
+-(void)isErrorOrNot:(BOOL)isError withError:(NSString *)error {
+    //You will get the error here and you can pull/comment to me on github.
+    NSLog(@"Error: %@",error);
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -134,14 +140,15 @@ ViewController.m
 
 ***Swift***
 
-Note: For swift make Bridging Header file and write import statement there and can directly use anywhere and use bellow code.
+Note: For swift you also can make Bridging Header file and can directly use anywhere and use bellow code.
 
 ```
 import UIKit
+import BHTextFieldManager
 
-class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate ,BHTextFieldManagerAccesoryViewDelegate{
+class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate ,BHTextFieldManagerDelegate{
 
-    var BHFramework = BHTextFieldManagerAccesoryView() //allocation
+    var BHFramework = BHTextFieldManager() //allocation
 
     override func viewDidLoad() {
     super.viewDidLoad()
@@ -160,7 +167,7 @@ class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate 
         return true
     }
 
-    //TODO: BHTextFieldManagerAccesoryViewDelegate Methods
+    //TODO: BHTextFieldManagerDelegate Methods
     func upKeyBoardBtn(_ sender: Any!) {
         print("Sender's First Responder is Resign, and Up Button Clicked")
     }
@@ -169,6 +176,12 @@ class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate 
     }
     func doneKeyBoardBtn(_ sender: Any!) {
         print("Sender's First Responder is Resign, and Done Button Clicked")
+    }
+    
+    //Error Showing Method
+    func isErrorOrNot(_ isError: Bool, withError error: String?) {
+        //You will get the error here and you can pull/comment to me on github.
+        print("Error: \(error ?? "Error")")
     }
 
     override func didReceiveMemoryWarning() {
@@ -180,7 +193,58 @@ class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate 
 
 NOTE
 ---
-Please note there is a three types of framework files. One is only for iPhone Device/Generic Devices, and second is only for Simulator and third is run on both. When you publish or archive the app please use or rplace the framework to "FrameworkForDeviceOnly" framework file otherwise it creates an error for architecture.
+Please note there is a two types of framework files. One is only for iPhone Device/Generic Devices, and second is run on both iPhone Device/Simulator. When you publish or archive the app please use or rplace the framework to "FrameworkForDeviceOnly" framework file otherwise it creates an error for architecture.
+
+SOLUTION
+--------
+To remove that replacement of the framework you can simply write bellow script in the run script.
+```
+#!/bin/sh
+#  Script.sh
+#
+#  Created by Bhavik's Mac on 18/07/18.
+#  Copyright © 2018 Bhavik Barot. All rights reserved.
+
+APP_PATH="${TARGET_BUILD_DIR}/${WRAPPER_NAME}"
+
+# This script loops through the frameworks embedded in the application and
+# removes unused architectures.
+find "$APP_PATH" -name 'BHTextFieldManager.framework' -type d | while read -r FRAMEWORK
+do
+FRAMEWORK_EXECUTABLE_NAME=$(defaults read "$FRAMEWORK/Info.plist" CFBundleExecutable)
+FRAMEWORK_EXECUTABLE_PATH="$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME"
+echo "Executable is $FRAMEWORK_EXECUTABLE_PATH"
+
+EXTRACTED_ARCHS=()
+
+for ARCH in $ARCHS
+do
+echo "Extracting $ARCH from $FRAMEWORK_EXECUTABLE_NAME"
+lipo -extract "$ARCH" "$FRAMEWORK_EXECUTABLE_PATH" -o "$FRAMEWORK_EXECUTABLE_PATH-$ARCH"
+EXTRACTED_ARCHS+=("$FRAMEWORK_EXECUTABLE_PATH-$ARCH")
+done
+
+echo "Merging extracted architectures: ${ARCHS}"
+lipo -o "$FRAMEWORK_EXECUTABLE_PATH-merged" -create "${EXTRACTED_ARCHS[@]}"
+rm "${EXTRACTED_ARCHS[@]}"
+
+echo "Replacing original executable with thinned version"
+rm "$FRAMEWORK_EXECUTABLE_PATH"
+mv "$FRAMEWORK_EXECUTABLE_PATH-merged" "$FRAMEWORK_EXECUTABLE_PATH"
+
+done
+```
+
+#### Adding Run Script for Framework
+
+1) Create new run script:
+        Select the Project, Choose Target → Project Name → Build Phase → Press “+” and Add the Run Script.
+
+![screen shot 2018-09-14 at 2 35 15 pm](https://user-images.githubusercontent.com/39043956/45541655-4f672900-b82d-11e8-916d-d7efb1d7cb4d.png)
+
+2) Write above script in the run script box.
+
+![screen shot 2018-09-14 at 2 35 58 pm](https://user-images.githubusercontent.com/39043956/45541786-95bc8800-b82d-11e8-94bb-cc069e21fe1c.png)
 
 LICENSE
 ---
