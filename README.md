@@ -197,7 +197,7 @@ Please note there is a two types of framework files. One is only for iPhone Devi
 
 SOLUTION
 --------
-To remove that replacement of the framework you can simply write bellow script in the run script.
+To remove that replacement of the framework you can simply write bellow script in the run script and use Universal Framework.
 ```
 #!/bin/sh
 #  Script.sh
