@@ -1,0 +1,6 @@
+framework module BHTextFieldManager {
+  umbrella header "BHTextFieldManager.h"
+
+  export *
+  module * { export * }
+}
