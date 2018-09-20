@@ -31,9 +31,37 @@ Often while developing an app the iPhone keyboard slide up and cover the `UIText
 
 Installation
 ==========================
+#### Cocoapods Installation
+
+[CocoaPods](https://cocoapods.org) is a dependency manager for Cocoa projects. You can install framerowk with the following steps:
+
+1) Installing Cocoapods -> Run bellow command for installing cocoapods into your PC.
+  ```
+  $ sudo gem install cocoapods
+  ```
+
+2) Create new project -> Run bellow command for going to the project directory.
+  ```
+  $ cd YourProjectDirectoryPath
+  ```
+3) Create a podfile -> Run bellow command for creating a pod file(if you have not created)
+  ```
+  $ pod init
+  ```
+4) Write Pod comment to the pod file -> Write bellow lines into the generated Podfile into your project.
+  ```
+  pod 'BHTextFieldManager'
+  ```
+5) Install cocoapods -> Save Podfile and Run bellow command for installing BHTextFieldManager to your project by cocoapods.
+  ```
+  $ pod install
+  ```
+6) Open project -> Now go to your project directory and open .xcworkspace file.
+
+7) Build Project -> Build your project and write import statement and use BHTextFieldManager whereever you want in your project.
 
 
-#### Installation
+#### Manual Installation
 
 1)  (i) Create a new project:
         File → New → Project. Select iOS and choose “Single View Application” and click “Next”. And set options like Product Name, Team, etc. and create the Project.
@@ -193,7 +221,7 @@ class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate 
 
 NOTE
 ---
-Please note there is a two types of framework files. One is only for iPhone Device/Generic Devices, and second is run on both iPhone Device/Simulator. When you publish or archive the app please use or rplace the framework to "FrameworkForDeviceOnly" framework file otherwise it creates an error for architecture.
+If you are not using cocoapos and install framework manually then please note there is a two types of framework files. One is only for iPhone Device/Generic Devices and second is run on both iPhone Device/Simulator. When you publish or archive the app on appstore please use or rplace the framework file to "FrameworkForDeviceOnly" framework file otherwise it creates an error for architecture.
 
 SOLUTION
 --------
