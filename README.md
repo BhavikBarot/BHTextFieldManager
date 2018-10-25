@@ -88,7 +88,7 @@ While coping the framework in Project Explorer, check “Copy items if needed�
 
 2) set the textfields/textviews and give a tag from 101 to N in order to navigate the textfields sequance.
 
-3) delegate the textfields and textviews.
+3) In new version now there is not needed to add delegates to the textfields and textviews.
 
 4) Setup the framework and see the demo projects for full usage and installation.
 
@@ -105,7 +105,7 @@ ViewController.h
 #import <UIKit/UIKit.h>
 #import <BHTextFieldManager/BHTextFieldManager.h>
 
-@interface ViewController : UIViewController<UITextFieldDelegate,UITextViewDelegate,BHTextFieldManagerDelegate>
+@interface ViewController : UIViewController<BHTextFieldManagerDelegate>
 
 @end
 
@@ -130,25 +130,28 @@ ViewController.m
     BHFramework.delegate = self;
     [BHFramework setEnable:self.view];
 }
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    textField.inputAccessoryView = [BHFramework setInputViewForKeyboard:textField];
-}
--(BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    textView.inputAccessoryView = [BHFramework setInputViewForKeyboard:textView];
-    return YES;
-}
 
 //TODO: BHTextFieldManagerDelegate Methods
--(void)upKeyBoardBtn:(id)sender {
+-(void)upKeyBoardBtn:(id)sender isLastTextFieldOrTextView:(enum senderIDType)type {
     //Do Something...
-    NSLog(@"Sender's First Responder is Resign, and Up Button Clicked");
+    if (type == TextField) {
+        NSLog(@"Sender(UITextField)'s First Responder is Resign, and Up Button Clicked");
+    }
+    else {
+        NSLog(@"Sender(UITextView)'s First Responder is Resign, and Up Button Clicked");
+    }
 }
--(void)downKeyBoardBtn:(id)sender {
-    //Do Something...
-    NSLog(@"Sender's First Responder is Resign, and Down Button Clicked");
+-(void)downKeyBoardBtn:(id)sender isLastTextFieldOrTextView:(enum senderIDType)type {
+    switch (type) {
+        case TextField:
+            NSLog(@"Sender(UITextField)'s First Responder is Resign, and Down Button Clicked");
+            break;
+        case TextView:
+            NSLog(@"Sender(UITextView)'s First Responder is Resign, and Down Button Clicked");
+            break;
+    }
 }
--(void)doneKeyBoardBtn:(id)sender {
+-(void)doneKeyBoardBtn:(id)sender isLastTextFieldOrTextView:(enum senderIDType)type {
     //Do Something...
     NSLog(@"Sender's First Responder is Resign, and Done Button Clicked");
 }
@@ -174,7 +177,7 @@ Note: For swift you also can make Bridging Header file and can directly use anyw
 import UIKit
 import BHTextFieldManager
 
-class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate ,BHTextFieldManagerDelegate{
+class ViewController: UIViewController, BHTextFieldManagerDelegate {
 
     var BHFramework = BHTextFieldManager() //allocation
 
@@ -187,22 +190,24 @@ class ViewController: UIViewController ,UITextFieldDelegate ,UITextViewDelegate 
         BHFramework.setEnable(self.view)
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.inputAccessoryView = BHFramework.setInputViewForKeyboard(textField)
-    }
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        textView.inputAccessoryView = BHFramework.setInputViewForKeyboard(textView)
-        return true
-    }
-
     //TODO: BHTextFieldManagerDelegate Methods
-    func upKeyBoardBtn(_ sender: Any!) {
-        print("Sender's First Responder is Resign, and Up Button Clicked")
+    func upKeyBoardBtn(_ sender: Any!, isLastTextFieldOrTextView type: senderIDType) {
+        if type == .TextField {
+            print("Sender(UITextField)'s First Responder is Resign, and Up Button Clicked")
+        }
+        else {
+            print("Sender(UITextView)'s First Responder is Resign, and Up Button Clicked")
+        }
     }
-    func downKeyBoardBtn(_ sender: Any!) {
-        print("Sender's First Responder is Resign, and Down Button Clicked")
+    func downKeyBoardBtn(_ sender: Any!, isLastTextFieldOrTextView type: senderIDType) {
+        switch type {
+        case .TextField:
+            print("Sender(UITextField)'s First Responder is Resign, and Down Button Clicked")
+        case .TextView:
+            print("Sender(UITextView)'s First Responder is Resign, and Down Button Clicked")
+        }
     }
-    func doneKeyBoardBtn(_ sender: Any!) {
+    func doneKeyBoardBtn(_ sender: Any!, isLastTextFieldOrTextView type: senderIDType) {
         print("Sender's First Responder is Resign, and Done Button Clicked")
     }
     
