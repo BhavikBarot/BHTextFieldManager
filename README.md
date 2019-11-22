@@ -285,7 +285,7 @@ Distributed under the MIT License.
 
 Contributions
 ---
-You can contribute through pull requests and issues on GitHub.
+You can contribute through suggestion or pointing out an issues on GitHub or on a Mail.
 
 Author
 ---
